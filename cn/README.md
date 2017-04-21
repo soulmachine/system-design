@@ -8,6 +8,9 @@
 <https://www.gitbook.com/book/soulmachine/system-design/>
 
 
+{% include "./SUMMARY.md" %}
+
+
 # Community
 
 Github: <https://www.github.com/soulmachine/system-design>
