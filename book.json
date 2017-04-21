@@ -1,0 +1,14 @@
+{
+    "gitbook": "3.x.x",
+    "title": "系统设计",
+    "description": "系统设计面试题精选",
+    "plugins": ["katex", "github", "codesnippet", "image-captions", "disqus"],
+    "pluginsConfig": {
+        "disqus": {
+            "shortName": "system-design"
+        },
+        "github": {
+            "url": "https://www.github.com/soulmachine/system-design"
+        }
+    }
+}
