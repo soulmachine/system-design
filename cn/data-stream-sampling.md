@@ -38,3 +38,4 @@
 ## 参考资料
 
 * [浅谈流处理算法 (1) – 蓄水池采样](https://rosona.github.io/post/20151223/)
+* [Google Interview Question: Given a stream of integers of... | Glassdoor](https://www.glassdoor.com/Interview/Given-a-stream-of-integers-of-unknown-possibly-large-length-how-would-you-pick-one-at-random-Now-prove-its-random-QTN_36764.htm)
