@@ -11,21 +11,32 @@
 如何实现上述要求呢？
 
 
-## 方案1: 轮询Polling
+## 方案1: PriorityBlockingQueue + Polling
 
 我们很快可以想到第一个办法：
 
-* 用一个`java.util.PriorityQueue `来作为优先队列，用一个`ReentrantLock`把这个队列保护起来，就是线程安全的啦；也可以二合一，直接使用JDK里现成的`java.util.concurrent.PriorityBlockingQueue`
+* 用一个`java.util.concurrent.PriorityBlockingQueue`来作为优先队列。因为我们需要一个优先队列，又需要线程安全，用`PriorityBlockingQueue`再合适不过了。你也可以手工实现一个自己的`PriorityBlockingQueue`，用`java.util.PriorityQueue` + `ReentrantLock`，用一把锁把这个队列保护起来，就是线程安全的啦
 * 对于生产者，可以用一个`while(true)`，造一些随机任务塞进去
 * 对于消费者，起一个线程，在 `while(true)`里每隔几秒检查一下队列，如果有任务，则取出来执行。
 
 这个方案的确可行，总结起来就是**轮询(polling)**。轮询通常有个很大的缺点，就是时间间隔不好设置，间隔太长，任务无法及时处理，间隔太短，会很耗CPU。
 
 
-## 方案2: DelayQueue
+## 方案2: PriorityBlockingQueue + 时间差
 
-Java里有一个[DelayQueue](http://hg.openjdk.java.net/jdk8/jdk8/jdk/file/tip/src/share/classes/java/util/concurrent/DelayQueue.java)，完全符合题目的要求。DelayQueue 设计得非常巧妙，它的亮点是, 能够让消费者的**`while(true)`里没有sleep，不需要等待固定时间**。
+可以把方案1改进一下，`while(true)`里的逻辑变成：
 
+* 偷看一下堆顶的元素，但并不取出来，如果该任务过期了，则取出来
+* 如果没过期，则计算一下时间差，然后 sleep()该时间差
+
+不再是 sleep() 一个固定间隔了，消除了轮询的缺点。
+
+
+## 方案3: DelayQueue
+
+方案2虽然已经不错了，但是还可以优化一下，Java里有一个[DelayQueue](http://hg.openjdk.java.net/jdk8/jdk8/jdk/file/tip/src/share/classes/java/util/concurrent/DelayQueue.java)，完全符合题目的要求。DelayQueue 设计得非常巧妙，可以看做是一个特化版的`PriorityBlockingQueue`，它把**计算时间差并让消费者等待该时间差**的功能集成进了队列，消费者不需要关心时间差的事情了，直接在`while(true)`里不断`take()`就行了。
+
+DelayQueue的实现原理见下面的代码。
 
 ```java
 import java.util.PriorityQueue;
@@ -285,7 +296,7 @@ DelayQueue这个方案，每个消费者线程只需要等待所需要的时间�
 JDK里还有一个[ScheduledThreadPoolExecutor](http://hg.openjdk.java.net/jdk8/jdk8/jdk/file/tip/src/share/classes/java/util/concurrent/ScheduledThreadPoolExecutor.java)，原理跟DelayQueue类似，封装的更完善，平时工作中可以用它，不过面试中，还是拿DelayQueue来讲吧，它封装得比较薄，容易讲清楚原理。
 
 
-## 方案3: HashedWheelTimer
+## 方案4: HashedWheelTimer
 
 TODO
 
