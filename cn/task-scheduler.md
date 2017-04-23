@@ -280,19 +280,27 @@ public class TaskScheduler {
 }
 ```
 
+DelayQueue这个方案，每个消费者线程只需要等待所需要的时间差，因此响应速度更快。它内部用了一个优先队列，所以插入和删除的时间复杂度都是$$\log n$$。
+
+JDK里还有一个[ScheduledThreadPoolExecutor](http://hg.openjdk.java.net/jdk8/jdk8/jdk/file/tip/src/share/classes/java/util/concurrent/ScheduledThreadPoolExecutor.java)，原理跟DelayQueue类似，封装的更完善，平时工作中可以用它，不过面试中，还是拿DelayQueue来讲吧，它封装得比较薄，容易讲清楚原理。
+
 
 ## 方案3: HashedWheelTimer
 
 TODO
 
 
+**Follow up: 如何设计一个分布式的定时任务调度器呢？**
+
+
 ## 参考资料
 
+* [java.util.concurrent.DelayQueue](http://hg.openjdk.java.net/jdk8/jdk8/jdk/file/tip/src/share/classes/java/util/concurrent/DelayQueue.java)
+* [HashedWheelTimer.java - Github](https://github.com/netty/netty/blob/4.1/common/src/main/java/io/netty/util/HashedWheelTimer.java)
 * [delayQueue原理理解之源码解析 - 简书](http://www.jianshu.com/p/e0bcc9eae0ae)
 * [细说延时任务的处理 - 简书](http://www.jianshu.com/p/7beebbc61229)
 * [延迟任务的实现总结 - nick hao - 博客园](http://www.cnblogs.com/haoxinyue/p/6663720.html)
-* [java.util.concurrent.DelayQueue](http://hg.openjdk.java.net/jdk8/jdk8/jdk/file/tip/src/share/classes/java/util/concurrent/DelayQueue.java)
+* [定时器（Timer）的实现](http://novoland.github.io/%E5%B9%B6%E5%8F%91/2014/07/26/%E5%AE%9A%E6%97%B6%E5%99%A8%EF%BC%88Timer%EF%BC%89%E7%9A%84%E5%AE%9E%E7%8E%B0.html)
 * [java.util.concurrent.DelayQueue Example](https://examples.javacodegeeks.com/core-java/util/concurrent/delayqueue/java-util-concurrent-delayqueue-example/)
 * [HashedWheelTimer 原理 - ZimZz - 博客园](http://www.cnblogs.com/zemliu/p/3928285.html)
 * [Hash算法系列-具体算法（HashedWheelTimer） - CSDN](http://blog.csdn.net/yq76034150/article/details/6783398)
-* [HashedWheelTimer.java - Github](https://github.com/netty/netty/blob/4.1/common/src/main/java/io/netty/util/HashedWheelTimer.java)
