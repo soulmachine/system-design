@@ -10,7 +10,7 @@
 
 如何实现上述要求呢？我们很快可以想到第一个办法：
 
-* 用一个`java.util.PriorityQueue `来作为优先队列，用一个`ReentrantLock`把这个队列保护起来，就是线程安全的啦
+* 用一个`java.util.PriorityQueue `来作为优先队列，用一个`ReentrantLock`把这个队列保护起来，就是线程安全的啦；也可以二合一，直接使用JDK里现成的`java.util.concurrent.PriorityBlockingQueue`
 * 对于生产者，可以用一个`while(true)`，造一些随机任务塞进去
 * 对于消费者，起一个线程，在 `while(true)`里每隔几秒检查一下队列，如果有任务，则取出来执行。
 
