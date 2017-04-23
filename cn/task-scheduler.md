@@ -8,7 +8,12 @@
 * 生产者。不断往队列里塞任务。
 * 消费者。如果队列里有任务过期了，则取出来执行该任务。
 
-如何实现上述要求呢？我们很快可以想到第一个办法：
+如何实现上述要求呢？
+
+
+## 方案1: 轮询Polling
+
+我们很快可以想到第一个办法：
 
 * 用一个`java.util.PriorityQueue `来作为优先队列，用一个`ReentrantLock`把这个队列保护起来，就是线程安全的啦；也可以二合一，直接使用JDK里现成的`java.util.concurrent.PriorityBlockingQueue`
 * 对于生产者，可以用一个`while(true)`，造一些随机任务塞进去
@@ -16,10 +21,11 @@
 
 这个方案的确可行，总结起来就是**轮询(polling)**。轮询通常有个很大的缺点，就是时间间隔不好设置，间隔太长，任务无法及时处理，间隔太短，会很耗CPU。
 
+
+## 方案2: DelayQueue
+
 Java里有一个[DelayQueue](http://hg.openjdk.java.net/jdk8/jdk8/jdk/file/tip/src/share/classes/java/util/concurrent/DelayQueue.java)，完全符合题目的要求。DelayQueue 设计得非常巧妙，它的亮点是, 能够让消费者的**`while(true)`里没有sleep，不需要等待固定时间**。
 
-
-## DelayQueue
 
 ```java
 import java.util.PriorityQueue;
@@ -165,7 +171,7 @@ first = null; // don't retain ref while waiting
 * 只要线程B无限期的睡眠，那么这个本该被回收的对象就不能被GC销毁掉，那么就会造成内存泄露
 
 
-## Task对象
+### Task对象
 
 ```java
 import java.util.concurrent.Delayed;
@@ -201,7 +207,7 @@ public class Task implements Delayed {
 JDK中有一个接口`java.util.concurrent.Delayed`，可以用于表示具有过期时间的元素，刚好可以拿来表示任务这个概念。
 
 
-## 生产者
+### 生产者
 
 ```java
 import java.util.Random;
@@ -235,7 +241,7 @@ public class TaskProducer implements Runnable {
 生产者很简单，就是一个死循环，不断地产生一些是时间随机的任务。
 
 
-## 消费者
+### 消费者
 
 ```java
 public class TaskConsumer implements Runnable {
@@ -262,7 +268,7 @@ public class TaskConsumer implements Runnable {
 当 DelayQueue 里没有任务时，`TaskConsumer`会无限等待，直到被唤醒，因此它不会消耗CPU。
 
 
-## 定时任务调度器
+### 定时任务调度器
 
 ```java
 public class TaskScheduler {
@@ -275,8 +281,18 @@ public class TaskScheduler {
 ```
 
 
+## 方案3: HashedWheelTimer
+
+TODO
+
+
 ## 参考资料
 
+* [delayQueue原理理解之源码解析 - 简书](http://www.jianshu.com/p/e0bcc9eae0ae)
+* [细说延时任务的处理 - 简书](http://www.jianshu.com/p/7beebbc61229)
+* [延迟任务的实现总结 - nick hao - 博客园](http://www.cnblogs.com/haoxinyue/p/6663720.html)
 * [java.util.concurrent.DelayQueue](http://hg.openjdk.java.net/jdk8/jdk8/jdk/file/tip/src/share/classes/java/util/concurrent/DelayQueue.java)
 * [java.util.concurrent.DelayQueue Example](https://examples.javacodegeeks.com/core-java/util/concurrent/delayqueue/java-util-concurrent-delayqueue-example/)
-* [delayQueue原理理解之源码解析 - 简书](http://www.jianshu.com/p/e0bcc9eae0ae)
+* [HashedWheelTimer 原理 - ZimZz - 博客园](http://www.cnblogs.com/zemliu/p/3928285.html)
+* [Hash算法系列-具体算法（HashedWheelTimer） - CSDN](http://blog.csdn.net/yq76034150/article/details/6783398)
+* [HashedWheelTimer.java - Github](https://github.com/netty/netty/blob/4.1/common/src/main/java/io/netty/util/HashedWheelTimer.java)
