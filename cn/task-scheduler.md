@@ -16,7 +16,7 @@
 
 这个方案的确可行，总结起来就是**轮询(polling)**。轮询通常有个很大的缺点，就是时间间隔不好设置，间隔太长，任务无法及时处理，间隔太短，会很耗CPU。
 
-JDK里有一个[java.util.concurrent.DelayQueue](http://hg.openjdk.java.net/jdk8/jdk8/jdk/file/tip/src/share/classes/java/util/concurrent/DelayQueue.java)，实现了题目的所有要求。DelayQueue 的亮点是, 能够让消费者的**`while(true)`里没有sleep，不需要等待固定时间**。
+Java里有一个[DelayQueue](http://hg.openjdk.java.net/jdk8/jdk8/jdk/file/tip/src/share/classes/java/util/concurrent/DelayQueue.java)，完全符合题目的要求。DelayQueue 设计得非常巧妙，它的亮点是, 能够让消费者的**`while(true)`里没有sleep，不需要等待固定时间**。
 
 
 ## DelayQueue
