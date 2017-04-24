@@ -3,7 +3,7 @@
 本书精选了一些经典的系统设计题，也是各大公司常考的，进行详细深入的讲解，帮助读者举一反三，各个击破。
 
 
-# 在线阅读
+### 在线阅读
 
 <https://www.gitbook.com/book/soulmachine/system-design/>
 
@@ -11,7 +11,7 @@
 {% include "./SUMMARY.md" %}
 
 
-# Community
+### Community
 
 Github: <https://www.github.com/soulmachine/system-design>
 
@@ -22,5 +22,5 @@ Github: <https://www.github.com/soulmachine/system-design>
 ![](../images/silicon-job.jpeg)
 
 
-## License
+### License
 Book License: [CC BY-SA 3.0 License](http://creativecommons.org/licenses/by-sa/3.0/)

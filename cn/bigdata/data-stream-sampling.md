@@ -2,7 +2,7 @@
 
 这是一个经典的数据流采样问题，我们一步一步来分析。
 
-## 当k=1时
+### 当k=1时
 
 我们先考虑最简单的情况，k=1，即只需要随机抽取一个样本出来。抽样方法如下：
 
@@ -19,7 +19,7 @@
 由1，2，3知n>=1时命题成立，证毕。
 
 
-# 当k>1时
+### 当k>1时
 
 当 k > 1，需要随机采样多个样本时，方法跟上面很类似，
 
@@ -35,7 +35,7 @@
 由1，2，3知n>=1时命题成立，证毕。
 
 
-## 参考资料
+### 参考资料
 
 * [浅谈流处理算法 (1) – 蓄水池采样](https://rosona.github.io/post/20151223/)
 * [Google Interview Question: Given a stream of integers of... | Glassdoor](https://www.glassdoor.com/Interview/Given-a-stream-of-integers-of-unknown-possibly-large-length-how-would-you-pick-one-at-random-Now-prove-its-random-QTN_36764.htm)
