@@ -11,7 +11,7 @@
 如何实现上述要求呢？
 
 
-## 方案1: PriorityBlockingQueue + Polling
+### 方案1: PriorityBlockingQueue + Polling
 
 我们很快可以想到第一个办法：
 
@@ -22,7 +22,7 @@
 这个方案的确可行，总结起来就是**轮询(polling)**。轮询通常有个很大的缺点，就是时间间隔不好设置，间隔太长，任务无法及时处理，间隔太短，会很耗CPU。
 
 
-## 方案2: PriorityBlockingQueue + 时间差
+### 方案2: PriorityBlockingQueue + 时间差
 
 可以把方案1改进一下，`while(true)`里的逻辑变成：
 
@@ -32,7 +32,7 @@
 不再是 sleep() 一个固定间隔了，消除了轮询的缺点。
 
 
-## 方案3: DelayQueue
+### 方案3: DelayQueue
 
 方案2虽然已经不错了，但是还可以优化一下，Java里有一个[DelayQueue](http://hg.openjdk.java.net/jdk8/jdk8/jdk/file/tip/src/share/classes/java/util/concurrent/DelayQueue.java)，完全符合题目的要求。DelayQueue 设计得非常巧妙，可以看做是一个特化版的`PriorityBlockingQueue`，它把**计算时间差并让消费者等待该时间差**的功能集成进了队列，消费者不需要关心时间差的事情了，直接在`while(true)`里不断`take()`就行了。
 
@@ -182,7 +182,7 @@ first = null; // don't retain ref while waiting
 * 只要线程B无限期的睡眠，那么这个本该被回收的对象就不能被GC销毁掉，那么就会造成内存泄露
 
 
-### Task对象
+#### Task对象
 
 ```java
 import java.util.concurrent.Delayed;
@@ -218,7 +218,7 @@ public class Task implements Delayed {
 JDK中有一个接口`java.util.concurrent.Delayed`，可以用于表示具有过期时间的元素，刚好可以拿来表示任务这个概念。
 
 
-### 生产者
+#### 生产者
 
 ```java
 import java.util.Random;
@@ -252,7 +252,7 @@ public class TaskProducer implements Runnable {
 生产者很简单，就是一个死循环，不断地产生一些是时间随机的任务。
 
 
-### 消费者
+#### 消费者
 
 ```java
 public class TaskConsumer implements Runnable {
@@ -279,7 +279,7 @@ public class TaskConsumer implements Runnable {
 当 DelayQueue 里没有任务时，`TaskConsumer`会无限等待，直到被唤醒，因此它不会消耗CPU。
 
 
-### 定时任务调度器
+#### 定时任务调度器
 
 ```java
 public class TaskScheduler {
@@ -296,7 +296,7 @@ DelayQueue这个方案，每个消费者线程只需要等待所需要的时间�
 JDK里还有一个[ScheduledThreadPoolExecutor](http://hg.openjdk.java.net/jdk8/jdk8/jdk/file/tip/src/share/classes/java/util/concurrent/ScheduledThreadPoolExecutor.java)，原理跟DelayQueue类似，封装的更完善，平时工作中可以用它，不过面试中，还是拿DelayQueue来讲吧，它封装得比较薄，容易讲清楚原理。
 
 
-## 方案4: HashedWheelTimer
+### 方案4: HashedWheelTimer
 
 TODO
 
@@ -304,7 +304,7 @@ TODO
 **Follow up: 如何设计一个分布式的定时任务调度器呢？**
 
 
-## 参考资料
+### 参考资料
 
 * [java.util.concurrent.DelayQueue](http://hg.openjdk.java.net/jdk8/jdk8/jdk/file/tip/src/share/classes/java/util/concurrent/DelayQueue.java)
 * [HashedWheelTimer.java - Github](https://github.com/netty/netty/blob/4.1/common/src/main/java/io/netty/util/HashedWheelTimer.java)
