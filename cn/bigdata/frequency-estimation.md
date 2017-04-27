@@ -63,9 +63,6 @@ class CountMeanMinSketch {
 Count-Mean-Min Sketch算法能够显著的改善在长尾数据上的精确度。
 
 
-### 方案5: HyperLogLog
-
-
 ### 参考资料
 
 * [数据流处理—摘要的艺术](http://chuansong.me/n/2035207)

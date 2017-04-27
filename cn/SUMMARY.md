@@ -13,6 +13,6 @@
     * [数据流采样](bigdata/data-stream-sampling.md)
     * [基数估计](bigdata/cardinality-estimation.md)
     * [频率估计](bigdata/frequency-estimation.md)
-    * [Top K 元素](bigdata/heavy-hitters.md)
+    * [Top K 频繁项](bigdata/heavy-hitters.md)
     * [范围查询](bigdata/range-query.md)
     * [成员查询](bigdata/membership-query.md)

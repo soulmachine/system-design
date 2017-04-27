@@ -59,17 +59,16 @@ Lossy Counting 背后朴素的思想是，出现频率高的元素，不太可�
 
 ### 方案5: SpaceSaving
 
-SpaceSaving 算法流程：
-
-1. 
-
-目前，工程领域已经涌现众多性能优越的Top K算法，有基于计数的Sticky Sampling算法，也有空间使用率很低的Space Saving算法（思路和蓄水池有一点像，都是概率替换），还有使用Bloom Filter数据结构的算法，这些算法作用于Spark集群，理论上效果比方案二更好，但是消耗的资源更多。
+TODO, 原始论文 "Efficient Computation of Frequent and Top-k Elements in Data Streams"
 
 
 ### 参考资料
 
-* [Approximate Frequency Counts over Data Streams](http://delab.csd.auth.gr/courses/c_dm_pms/afc.pdf) by Gurmeet Singh Manku
-* [Efficient Computation of Frequent and Top-k Elements in Data Streams](http://www.cse.ust.hk/~raywong/comp5331/References/EfficientComputationOfFrequentAndTop-kElementsInDataStreams.pdf) by Ahmed Metwally
-* [Finding Frequent Items in Data Streams ](http://dmac.rutgers.edu/Workshops/WGUnifyingTheory/Slides/cormode.pdf)
+1. [An improved data stream summary:the count-min sketch and its applications](http://vaffanculo.twiki.di.uniroma1.it/pub/Ing_algo/WebHome/p14_Cormode_JAl_05.pdf) by Graham Cormode
+1. [Approximate Frequency Counts over Data Streams](http://delab.csd.auth.gr/courses/c_dm_pms/afc.pdf) by Gurmeet Singh Manku
+1. A.Metwally, D.Agrawal, A.El Abbadi. Efficient Computation of Frequent and Top-k Elements in Data Streams. In Proceeding of the 10th International Conference on Database Theory(ICDT), pp 398-412,2005.
+1. Massimo Cafaro, et al. “A parallel space saving algorithm for frequent items and the Hurwitz zeta distribution”. Proceeding arXiv: 1401.0702v12 [cs.DS] 19 Setp 2015.
+1. [Efficient Computation of Frequent and Top-k Elements in Data Streams](http://www.cse.ust.hk/~raywong/comp5331/References/EfficientComputationOfFrequentAndTop-kElementsInDataStreams.pdf) by Ahmed Metwally
+1. [Finding Frequent Items in Data Streams ](http://dmac.rutgers.edu/Workshops/WGUnifyingTheory/Slides/cormode.pdf)
 * [实时大数据流上的频率统计：Lossy Counting Algorithm - 待字闺中](http://www.wdiandi.com/p/b3779f.shtml)
 * [What is Lossy Counting? - Stack Overflow](http://stackoverflow.com/a/8033083/381712)
