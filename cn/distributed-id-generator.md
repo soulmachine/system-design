@@ -1,17 +1,31 @@
-我们经常需要给网站里的每个用户赋予一个唯一ID，或者给每条微博一个唯一ID，等等。如何设计一个分布式ID生成器(Distributed ID Generator)？
-
-Follow up: 如何让ID可以粗略的按照时间排序？
+如何设计一个分布式ID生成器(Distributed ID Generator)，并保证ID按时间粗略有序？
 
 
-### 预估ID的容量
+### 应用场景(Scenario)
 
-首先，我们需要预估ID的最高容量，举几个例子，
+现实中很多业务都有**生成唯一ID**的需求，例如：
 
-* 短网址。短网址服务需要对互联网上的每个URL，计算出一个短的URL，那么互联网总共有多少个URL呢？ 参考 <http://www.worldwidewebsize.com> 的数据，当前大概有45亿的URL。45亿超过了一个32位无符号整数的范围，用一个64位整数还是绰绰有余的。微博的短网址服务用的是长度为7的字符串，这个字符串可以看做是62进制的数，那么最大能表示$${62}^7=3521614606208$$个网址，刚好在32位整数和64位整数的范围之间。
-* 用户ID。这个该怎么预估呢？假设地球上每个人都来注册你的网站，那么你只需要知道地球总人口有多少就行了。当前地球目前总人口约70亿，用一个10位的十进制数来表示绰绰有余了。
-* 微博的ID。假设要给每个微博赋予一个唯一的ID，这个ID最大有多大呢？假设我们知道用户每天发送的微博数那就好办了，每天的微博数x356x100，就够100年用了！新浪微博的数据我没查到，不过在这里<http://www.internetlivestats.com/twitter-statistics/>可以查到Twitter的数据，每年用户大概会发 2000亿条tweet, 这个数乘以100，就是 20000000000000，远远小于64位整数，因此可以用一个64位整数存下。
+* 用户ID
+* 微博ID
+* 聊天消息ID
+* 帖子ID
+* 订单ID
 
-基本上64位整数能够满足绝大多数的场景，我们需要根据具体业务进行分析，缩小范围，毕竟ID短一点，能够节省内存，所以在能够满足百年大计的情况下，越短越好。
+
+### 需求(Needs)
+
+这个ID往往会作为数据库主键，所以需要保证**全局唯一**。数据库会在这个字段上建立聚集索引(Clustered Index，参考 MySQL InnoDB)，即该字段会影响各条数据再物理存储上的顺序。
+
+ID还要尽可能**短**，节省内存，让数据库索引效率更高。基本上64位整数能够满足绝大多数的场景，但是如果能做到比64位更短那就更好了。需要根据具体业务进行分析，预估出ID的最大值，这个最大值通常比64位整数的上限小很多，于是我们可以用更少的bit表示这个ID。
+
+查询的时候，往往有分页或者**排序**的需求，所以需要给每条数据添加一个时间字段，并在其上建立普通索引(Secondary Index)。但是普通索引的访问效率比聚集索引慢，如果能够让ID**按照时间粗略有序**，则可以省去这个时间字段。为什么不是按照时间精确有序呢？因为按照时间精确有序是做不到的，除非用一个单机算法，在分布式场景下做到精确有序性能一般很差。
+
+这就引出了ID生成的三大核心需求：
+
+* 全局唯一(unique)
+* 按照时间粗略有序(sortable by time)
+* 尽可能短
+
 
 下面介绍一些常用的生成ID的方法。
 
@@ -25,7 +39,7 @@ Follow up: 如何让ID可以粗略的按照时间排序？
 * 2个字节表示的进程ID
 * 3个字节表示的计数器
 
-[UUID](https://en.wikipedia.org/wiki/Universally_unique_identifier)是一类算法的统称，具体有不同的实现。UUID的有点是每台机器可以独立产生ID，理论上保证不会重复，所以天然是分布式的，缺点是生成的ID太长，实际中要根据具体场景进行剪裁，生成更短的ID。
+[UUID](https://en.wikipedia.org/wiki/Universally_unique_identifier)是一类算法的统称，具体有不同的实现。UUID的有点是每台机器可以独立产生ID，理论上保证不会重复，所以天然是分布式的，缺点是生成的ID太长，不仅占用内存，而且索引查询效率低。
 
 
 ### 多台MySQL服务器
@@ -36,7 +50,7 @@ Follow up: 如何让ID可以粗略的按照时间排序？
 
 [Flickr就是这么做的](http://code.flickr.net/2010/02/08/ticket-servers-distributed-unique-primary-keys-on-the-cheap/)，仅仅使用了两台MySQL服务器。可见这个方法虽然简单无脑，但是性能足够好。不过要注意，在MySQL中，不需要把所有ID都存下来，每台机器只需要存一个MAX_ID就可以了。这需要用到MySQL的一个[REPLACE INTO](http://dev.mysql.com/doc/refman/5.0/en/replace.html)特性。
 
-这个方法的一个缺点是，ID是连续的，容易被爬虫抓数据，爬虫基本不用写代码，顺着ID一个一个发请求就是了，太方便了（手动斜眼）。
+这个方法跟单台数据库比，缺点是**ID是不是严格递增的**，只是粗略递增的。不过这个问题不大，我们的目标是粗略有序，不需要严格递增。
 
 
 ### Twitter Snowflake
@@ -57,3 +71,6 @@ Follow up: 如何让ID可以粗略的按照时间排序？
 * [Sharding & IDs at Instagram](https://engineering.instagram.com/sharding-ids-at-instagram-1cf5a71e5a5c)
 * [Ticket Servers: Distributed Unique Primary Keys on the Cheap](http://code.flickr.net/2010/02/08/ticket-servers-distributed-unique-primary-keys-on-the-cheap/)
 * [Twitter Snowflake](https://github.com/twitter/snowflake)
+* [细聊分布式ID生成方法 - 沈剑](http://chuansong.me/n/2459549)
+* [服务化框架－分布式Unique ID的生成方法一览 - 江南白衣](http://calvin1978.blogcn.com/articles/uuid.html)
+* [生成全局唯一ID的3个思路，来自一个资深架构师的总结](http://mp.weixin.qq.com/s?__biz=MzA5Nzc4OTA1Mw==&mid=2659598286&idx=1&sn=3172172ccea316b0ed83429ae718b54d&chksm=8be9eadcbc9e63caa10d708274b4fa34ceffa416ef4527e10e6b7a1a2d2f32cf8592d65bf728)
