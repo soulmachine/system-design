@@ -129,7 +129,7 @@ if (q.peek() == e) {
 
 **2. 线程leader的作用**
 
-`leader`这个成员有啥作用？它主要是为了减少不必要的等待时间。比如队列头部还有5秒就要开始了，那么就让消费者线程sleep 5秒，消费者不再需要等待固定的时间间隔了。
+`leader`这个成员有啥作用？DelayQueue的设计其实是一个Leader/Follower模式，`leader`就是指向Leader线程的。该模式可以减少不必要的等待时间，当一个线程是Leader时，它只需要一个时间差；其他Follower线程则无限等待。比如头节点任务还有5秒就要开始了，那么Leader线程会sleep 5秒，不需要傻傻地等待固定时间间隔。
 
 想象一下有个多个消费者线程用take方法去取任务,内部先加锁,然后每个线程都去peek头节点。如果leader不为空说明已经有线程在取了，让当前消费者无限等待。
 
@@ -322,3 +322,4 @@ JDK里还有一个[ScheduledThreadPoolExecutor](http://hg.openjdk.java.net/jdk8/
 * [java Disruptor工作原理，谁能用一个比喻形容下? - 知乎](https://www.zhihu.com/question/23235063)
 * [1分钟实现“延迟消息”功能 - 58沈剑](http://chuansong.me/n/1673795846413)
 * [Linux 下定时器的实现方式分析 - IBM](https://www.ibm.com/developerworks/cn/linux/l-cn-timers/)
+* [1分钟了解Leader-Follower线程模型 - 58沈剑](http://chuansong.me/n/1591963946624)
