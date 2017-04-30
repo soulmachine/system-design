@@ -317,3 +317,4 @@ TODO
 * [java.util.concurrent.DelayQueue Example](https://examples.javacodegeeks.com/core-java/util/concurrent/delayqueue/java-util-concurrent-delayqueue-example/)
 * [HashedWheelTimer 原理 - ZimZz - 博客园](http://www.cnblogs.com/zemliu/p/3928285.html)
 * [Hash算法系列-具体算法（HashedWheelTimer） - CSDN](http://blog.csdn.net/yq76034150/article/details/6783398)
+* [java Disruptor工作原理，谁能用一个比喻形容下? - 知乎](https://www.zhihu.com/question/23235063)
