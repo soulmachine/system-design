@@ -1,10 +1,11 @@
 # 内容目录
 
-* [分布式发号器](distributed-id-generator.md)
+* [分布式ID生成器](distributed-id-generator.md)
 * [短网址系统(TinyURL)](tinyurl.md)
 * [信息流(News Feed)](news-feed.md)
 * [定时任务调度器](task-scheduler.md)
 * [API限速](api-rate-limiting.md)
+* [线程安全的HashMap](hashmap.md)
 * [负载均衡](load-balancer.md)
 * [KV存储引擎](kv-store.md)
 * [网络爬虫](crawler.md)
