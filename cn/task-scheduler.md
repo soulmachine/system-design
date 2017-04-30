@@ -1,14 +1,6 @@
 请实现一个定时任务调度器，有很多任务，每个任务都有一个时间戳，任务会在该时间点开始执行。
 
-定时执行任务是一个很常见的需求，所以这题也是从实践中提炼出来的，做好了将来说不定能用上。
-
-仔细分析一下，这题可以分为三个部分：
-
-* 优先队列。因为多个任务需要按照时间从小到大排序，所以需要用优先队列。
-* 生产者。不断往队列里塞任务。
-* 消费者。如果队列里有任务过期了，则取出来执行该任务。
-
-如何实现上述要求呢？
+定时执行任务是一个很常见的需求，例如Uber打车48小时后自动好评，淘宝购物15天后默认好评，等等。
 
 
 ### 方案1: PriorityBlockingQueue + Polling
@@ -298,12 +290,22 @@ DelayQueue这个方案，每个消费者线程只需要等待所需要的时间�
 JDK里还有一个[ScheduledThreadPoolExecutor](http://hg.openjdk.java.net/jdk8/jdk8/jdk/file/tip/src/share/classes/java/util/concurrent/ScheduledThreadPoolExecutor.java)，原理跟DelayQueue类似，封装的更完善，平时工作中可以用它，不过面试中，还是拿DelayQueue来讲吧，它封装得比较薄，容易讲清楚原理。
 
 
-### 方案4: HashedWheelTimer
+### 方案4: 时间轮(HashedWheelTimer)
 
-TODO
+时间轮(HashedWheelTimer)其实很简单，就是一个循环队列，如下图所示，
 
+![](http://upload-images.jianshu.io/upload_images/584578-044ce81079679c1c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+上图是一个长度为8的循环队列，假设该时间轮精度为秒，即每秒走一格，像手表那样，走完一圈就是8秒。每个格子指向一个任务集合，时间轮无限循环，每转到一个格子，就扫描该格子下面的所有任务，把时间到期的任务取出来执行。
+
+举个例子，假设指针当前正指向格子0，来了一个任务需要4秒后执行，那么这个任务就会放在格子4下面，如果来了一个任务需要20秒后执行怎么？由于这个循环队列转一圈只需要8秒，这个任务需要多转2圈，所以这个任务的位置虽然依旧在格子4(20%8+0=4)下面，不过需要多转2圈后才执行。因此每个任务需要有一个字段记录需圈数，每转一圈就减1，减到0则立刻取出来执行。
+
+怎么实现时间轮呢？Netty中已经有了一个时间轮的实现, [HashedWheelTimer.java](https://github.com/netty/netty/blob/4.1/common/src/main/java/io/netty/util/HashedWheelTimer.java)，可以参考它的源代码。
+
+时间轮的优点是性能高，插入和删除的时间复杂度都是O(1)。Linux 内核中的定时器采用的就是这个方案。
 
 **Follow up: 如何设计一个分布式的定时任务调度器呢？**
+答: Redis ZSet, RabbitMQ等
 
 
 ### 参考资料
@@ -318,3 +320,5 @@ TODO
 * [HashedWheelTimer 原理 - ZimZz - 博客园](http://www.cnblogs.com/zemliu/p/3928285.html)
 * [Hash算法系列-具体算法（HashedWheelTimer） - CSDN](http://blog.csdn.net/yq76034150/article/details/6783398)
 * [java Disruptor工作原理，谁能用一个比喻形容下? - 知乎](https://www.zhihu.com/question/23235063)
+* [1分钟实现“延迟消息”功能 - 58沈剑](http://chuansong.me/n/1673795846413)
+* [Linux 下定时器的实现方式分析 - IBM](https://www.ibm.com/developerworks/cn/linux/l-cn-timers/)
