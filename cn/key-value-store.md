@@ -2,7 +2,9 @@
 
 这是一道频繁出现的题目，个人认为也是一道很好的题目，这题纵深非常深，内行的人可以讲的非常深。
 
-目前开源的KV存储引擎中，RocksDB是流行的一个，MongoDB和MySQL底层可以换成RocksDB， TiDB底层直接使用了RocksDB，基本上分布数据库的底层不约而同的都选择了RocksDB。
+首先讲两个术语，**数据库**和**存储引擎**。数据库往往是一个比较丰富完整的系统, 提供了SQL查询语言，事务和水平扩展等支持。然而存储引擎则是小而精, 纯粹专注于单机的读/写/存储。一般来说, 数据库底层往往会使用某种存储引擎。
+
+目前开源的KV存储引擎中，RocksDB是流行的一个，MongoDB和MySQL底层可以切换成RocksDB， TiDB底层直接使用了RocksDB。大多数分布式数据库的底层不约而同的都选择了RocksDB。
 
 RocksDB最初是从LevelDB进化而来的，我们先从简单一点的LevelDB入手，借鉴它的设计思路。
 
@@ -76,9 +78,18 @@ LevelDB更新一条记录时，并不会本地修改SST文件，而是会作为�
 
 LevelDB删除一条记录时，也不会修改SST文件，而是用一个特殊值(墓碑值，tombstone)作为value，将这个key-value对追加到SST文件尾部，在SST文件合并过程中，这种值的key都会被忽略掉。
 
+核心思想就是把写操作转换为顺序追加，从而提高了写的效率。
+
 
 ## 读取数据
 
+读操作使用了如下几个手段进行优化：
+
+* MemTable + SkipList
+* Binary Search(通过 manifest 文件)
+* 页缓存
+* bloom filter
+* 周期性分层合并
 
 
 ## 分层合并(Leveled Compaction)
@@ -93,3 +104,5 @@ LevelDB删除一条记录时，也不会修改SST文件，而是用一个特殊�
 * [LSM 算法的原理是什么？ - 知乎](https://www.zhihu.com/question/19887265)
 * [数据库如何用 WAL 保证事务一致性？ - 知乎专栏](https://zhuanlan.zhihu.com/p/24900322)
 * [LevelDB系列概述 - 360基础架构组](http://chuansong.me/n/1509342851514)
+* [存储引擎技术架构与内幕 (leveldb-1) - GitHub](https://github.com/abbshr/abbshr.github.io/issues/58)
+* [leveldb中的SSTable (3)](http://bean-li.github.io/leveldb-sstable-bloom-filter/)
