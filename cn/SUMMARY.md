@@ -8,7 +8,7 @@
 * [线程安全的HashMap](hashmap.md)
 * [最近一个小时内访问频率最高的10个IP](top-k-frequent-ip-in-one-hour.md)
 * [负载均衡](load-balancer.md)
-* [KV存储引擎](kv-store.md)
+* [Key-Value存储引擎](key-value-store.md)
 * [网络爬虫](crawler.md)
 * [PageRank](pagerank.md)
 * [搜索引擎](search-engine.md)
@@ -19,3 +19,5 @@
     * [Top K 频繁项](bigdata/heavy-hitters.md)
     * [范围查询](bigdata/range-query.md)
     * [成员查询](bigdata/membership-query.md)
+* 附录
+    * [跳表(Skip List)](appendix/skip-list.md)
