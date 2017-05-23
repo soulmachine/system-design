@@ -21,3 +21,4 @@
     * [成员查询](bigdata/membership-query.md)
 * 附录
     * [跳表(Skip List)](appendix/skip-list.md)
+    * [Raft](appendix/raft.md)
