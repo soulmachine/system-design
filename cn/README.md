@@ -17,10 +17,6 @@ Github: <https://www.github.com/soulmachine/system-design>
 
 微博： [@灵魂机器](http://weibo.com/soulmachine)
 
-小密圈：
-
-![](../images/silicon-job.jpeg)
-
 
 ### License
 Book License: [CC BY-SA 3.0 License](http://creativecommons.org/licenses/by-sa/3.0/)
