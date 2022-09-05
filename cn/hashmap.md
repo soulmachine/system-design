@@ -56,3 +56,4 @@ TODO
 * [深入理解Java内存模型（五） - 锁](http://www.infoq.com/cn/articles/java-memory-model-5)
 * [深入理解Java内存模型（六） - final](http://www.infoq.com/cn/articles/java-memory-model-6)
 * [深入理解Java内存模型（七） - 总结](http://www.infoq.com/cn/articles/java-memory-model-7)
+* [一种简单又高效的True Lock-free HashMap c++实现](https://zhuanlan.zhihu.com/p/348414580)
