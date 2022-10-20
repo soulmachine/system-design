@@ -5,7 +5,7 @@
 
 # 在线阅读
 
-<https://www.gitbook.com/book/soulmachine/system-design/>
+<https://soulmachine.gitbooks.io/system-design/content/cn/>
 
 
 # Community
