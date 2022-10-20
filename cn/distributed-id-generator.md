@@ -71,6 +71,6 @@ ID还要尽可能**短**，节省内存，让数据库索引效率更高。基�
 * [Sharding & IDs at Instagram](https://engineering.instagram.com/sharding-ids-at-instagram-1cf5a71e5a5c)
 * [Ticket Servers: Distributed Unique Primary Keys on the Cheap](http://code.flickr.net/2010/02/08/ticket-servers-distributed-unique-primary-keys-on-the-cheap/)
 * [Twitter Snowflake](https://github.com/twitter/snowflake)
-* [细聊分布式ID生成方法 - 沈剑](http://chuansong.me/n/2459549)
+* [细聊分布式ID生成方法 - 沈剑](https://mp.weixin.qq.com/s?__biz=MjM5ODYxMDA5OQ==&mid=403837240&idx=1&sn=ae9f2bf0cc5b0f68f9a2213485313127&scene=21)
 * [服务化框架－分布式Unique ID的生成方法一览 - 江南白衣](http://calvin1978.blogcn.com/articles/uuid.html)
-* [生成全局唯一ID的3个思路，来自一个资深架构师的总结](http://mp.weixin.qq.com/s?__biz=MzA5Nzc4OTA1Mw==&mid=2659598286&idx=1&sn=3172172ccea316b0ed83429ae718b54d&chksm=8be9eadcbc9e63caa10d708274b4fa34ceffa416ef4527e10e6b7a1a2d2f32cf8592d65bf728)
+* [生成全局唯一ID的3个思路，来自一个资深架构师的总结](https://mp.weixin.qq.com/s?__biz=MzI4MTY5NTk4Ng==&mid=2247489561&idx=1&sn=7396f373af4efa62ba4dbecc6d7f83b3&source=41)
